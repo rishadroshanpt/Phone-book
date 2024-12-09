@@ -32,22 +32,14 @@ def register(req):
         name=req.POST['name']
         email=req.POST['email']
         password=req.POST['password']
-        # try:
         if UserProfile.objects.filter(email=email).exists():
             messages.error(req, "Email is already in use.")
             return redirect(register)
-        
         otp=OTP(req)
         user_profile = UserProfile.objects.create(name=name,email=email, otp=otp, password=password)
-
-        # user=User.objects.create(first_name=name,email=email,password=password,username=email)
-        send_mail('OTP', otp, settings.EMAIL_HOST_USER, [email])
+        send_mail('Your registration OTP ,',f"OTP for registration is {otp}", settings.EMAIL_HOST_USER, [email])
         messages.success(req, "Registration successful. Please check your email for OTP.")
         return redirect(validate)
-            # return redirect(book_login)
-        # except:
-        #     messages.warning(req,'User already exists.')
-        #     return redirect(register)
     else:
         return render(req,'register.html')
     
@@ -65,28 +57,12 @@ def validate(req):
             user_profile.user = user  # Link the user with the UserProfile
             user_profile.otp_verified = True  # Mark OTP as verified
             user_profile.save()
-
-            # Mark OTP as verified
-            # user_profile.otp_verified = True
-            # user_profile.save()
-
-            # Log the user in
-            # user_profile.user.save()
-            # data=user_profile.user
-            # data1=User.objects.create(first_name=data.first_name,email=data.email,password=data.password,username=data.email)
-            # data1.save()
-            # print(data.first_name)
-
-            messages.success(req, "OTP verified successfully. You are now logged in.")
-            return redirect(book_login)  # Redirect to the home page after login
+            messages.success(req, "OTP verified successfully. You can now log in.")
+            return render(req,'login.html')  # Redirect to the home page after login
         except UserProfile.DoesNotExist:
             messages.error(req, "Invalid OTP. Please try again.")
             return redirect(validate)
-        # if uotp==otp:
-        #     user=User.objects.create_user(first_name=data.uname,email=data.email,password=data.pswd,username=data.email)
-        #     user.save()
     else:
-        # data=CUser.objects.get(name==id)
         return render(req,'validate.html')
 
 def home(req):
