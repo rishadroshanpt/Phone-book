@@ -58,7 +58,7 @@ def validate(req):
             user_profile.otp_verified = True  # Mark OTP as verified
             user_profile.save()
             messages.success(req, "OTP verified successfully. You can now log in.")
-            return render(req,'login.html')  # Redirect to the home page after login
+            return redirect(book_login)  # Redirect to the home page after login
         except UserProfile.DoesNotExist:
             messages.error(req, "Invalid OTP. Please try again.")
             return redirect(validate)
