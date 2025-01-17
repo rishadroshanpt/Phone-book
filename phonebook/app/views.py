@@ -74,12 +74,13 @@ def home(req):
     else:
         return redirect('book_login')
 
-def OTP(req) :
+def OTP(req):
     digits = "0123456789"
     OTP = ""
     for i in range(4) :
         OTP += digits[math.floor(random.random() * 10)]
     return OTP
+
 def add(req):
     if 'user' in req.session:
         if req.method=='POST':
